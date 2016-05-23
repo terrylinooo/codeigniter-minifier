@@ -32,7 +32,7 @@ $config['enable_hooks'] = TRUE;
 ```php
 $hook['display_override'][] = array(
     'class' => '',
-    'function' => 'CI_Minifier',
+    'function' => 'CI_Minifier_Hook_Loader',
     'filename' => '',
     'filepath' => ''
 );
