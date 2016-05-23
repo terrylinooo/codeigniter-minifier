@@ -7,7 +7,7 @@ Compress and minify output for your CodeIgniter framework websites. This library
 
 ------------------------------------
 
-##Step 1: Load CI_Minifier library##
+###Step 1: Load CI_Minifier library###
 
 Copy CI_Minifier.php to libraries folder, and then load CI_Minifier library by one of the following ways.
 
@@ -30,11 +30,11 @@ class MY_Controller extends CI_Controller
 $autoload['libraries'] = array('CI_Minifier');
 ```
 
-##Step 2: Enable Hooks in config/config.php##
+###Step 2: Enable Hooks in config/config.php###
 ```php
 $config['enable_hooks'] = TRUE;
 ```
-##Step 3: Define a 'display_override' to config/hooks.php##
+###Step 3: Define a 'display_override' to config/hooks.php###
 ```php
 $hook['display_override'][] = array(
     'class' => '',
@@ -46,7 +46,7 @@ $hook['display_override'][] = array(
 Keep "class", "filename" and "filepath" fields blank. 
 
 ----------------------------------------
-###Options###
+##Options##
 
 CodeIgniter Minifier has the following options, you can set the "option number" or "option string" to init() to minify HTML, CSS, Javascript as your choice. 
 
@@ -87,7 +87,7 @@ $this->ci_minifier->init(2);
 $this->ci_minifier->init('html,css'); 
 ```
 --------------------------------------------------
-###API###
+##API##
 
 ####html()####
 Minify HTML string
@@ -99,7 +99,7 @@ Minify HTML string
 $this->ci_minifier->html($input);
 ```
 
-####css)####
+####css()####
 Minify CSS string
 ```php
 /**
@@ -120,6 +120,6 @@ Minify Javascript string
 $this->ci_minifier->js($input);
 ```
 ---------------------------------------------
-###License###
+##License##
 GPL version 3
 
