@@ -104,14 +104,42 @@ $this->ci_minifier->css($input);
 
 ####js()####
 Minify Javascript string
-
-***Be careful: This method doesn't support "javascript automatic semicolon insertion", you must add semicolon by yourself, otherwise your javascript code will not work and generate error messages***.
 ```php
 /**
  * @param $input
  * @return string
  */
 $this->ci_minifier->js($input);
+```
+***Be careful: This method doesn't support "javascript automatic semicolon insertion", you must add semicolon by yourself, otherwise your javascript code will not work and generate error messages***.
+
+####Success example####
+Original code:
+```javascript
+<script>
+var d = new Date();
+d.setTime(d.getTime()+(7*24*60*60*1000));
+var expires = "expires="+d.toUTCString();
+document.cookie = "{$tmp_cookie_name}=1;domain=.{$tmp_cookie_domain};"+expires;
+</script>
+```
+After minifying
+```javascript
+<script>var d=new Date();d.setTime(d.getTime()+(7*24*60*60*1000));var expires="expires="+d.toUTCString();document.cookie="ssjd=1;domain=.dictpedia.org;"+expires;</script>
+```
+####Fail example####
+Original code is working with popular browsers because that browsers support "javascript automatic semicolon insertion".
+```javascript
+<script>
+var d = new Date()
+d.setTime(d.getTime()+(7*24*60*60*1000))
+var expires = "expires="+d.toUTCString()
+document.cookie = "{$tmp_cookie_name}=1;domain=.{$tmp_cookie_domain};"+expires;
+</script>
+```
+After minifying, this code will generate error because of semicolon issue.
+```javascript
+<script>var d=new Date()d.setTime(d.getTime()+(7*24*60*60*1000))var expires="expires="+d.toUTCString()document.cookie="ssjd=1;domain=.dictpedia.org;"+expires;</script>
 ```
 ---------------------------------------------
 ##License##
