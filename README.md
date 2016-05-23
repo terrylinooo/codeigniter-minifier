@@ -9,7 +9,11 @@ Compress and minify output for your CodeIgniter framework websites. This library
 
 Copy CI_Minifier.php to libraries folder, and then load CI_Minifier library by one of the following ways.
 
-(1) Load CI_Minifier library in Controller.
+```php
+$this->load->library('CI_Minifier');
+```
+
+####(1) Load CI_Minifier library in Controller.####
 ```php
 class MY_Controller extends CI_Controller
 {
@@ -19,7 +23,7 @@ class MY_Controller extends CI_Controller
 
         $this->load->library('CI_Minifier');
 ```
-(2) Load CI_Minifier library in config/autoload.php
+####(2) Load CI_Minifier library in config/autoload.php####
 ```php
 $autoload['libraries'] = array('CI_Minifier');
 ```
@@ -40,3 +44,38 @@ $hook['display_override'][] = array(
 Keep "class", "filename" and "filepath" fields blank. 
 
 ###Options###
+
+CodeIgniter Minifier has the following options, you can set the "option value" or "option string" to init() to minify HTML, CSS, Javascript as your choice. 
+you can put them together and separated by commas, for example: 'html,js'
+
+| option value  | option string | HTML | CSS | Javascript | 
+| 0 | off | x | x | x |
+| 1 | html,css,js | o | o | o |
+| 2 | html,css | o | o | x |
+| 3 | html,js | o | x | o |
+| 4 | html | o | x | x |
+| 5 | css,js | x | o | o |
+| 6 | css | x | o | x |
+| 7 | js | x | x | o |
+
+Notice that setting option to '1' or 'html,css,js' is totally unnecessary, because it is default.
+
+Here is the examples:
+```php
+// Keep original output, nothing changes. You can use it on some pages you won't minify.
+$this->ci_minifier->init(0);
+// same as
+$this->ci_minifier->init('off');
+```
+```php
+// Minify html only
+$this->ci_minifier->init(4); 
+// same as
+$this->ci_minifier->init('html'); 
+```
+```php
+// Minify html and css, except jaascript
+$this->ci_minifier->init(2);
+// same as
+$this->ci_minifier->init('html,css'); 
+```
