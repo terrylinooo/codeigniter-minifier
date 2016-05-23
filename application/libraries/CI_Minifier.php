@@ -86,6 +86,9 @@ class CI_Minifier
                 if ($type == 'js') {
                     self::$enable_js = true;
                 }
+                if ($type == 'off') {
+                    // nothing changes
+                }
             }
         }
     }
