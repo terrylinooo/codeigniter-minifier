@@ -5,6 +5,8 @@
 
 Compress and minify output for your CodeIgniter framework websites. This library supports CodeIgniter 3 only, it is able to not just minify HTML, but also CSS and Javascript.
 
+------------------------------------
+
 ###Step 1: Load CI_Minifier library###
 
 Copy CI_Minifier.php to libraries folder, and then load CI_Minifier library by one of the following ways.
@@ -13,7 +15,7 @@ Copy CI_Minifier.php to libraries folder, and then load CI_Minifier library by o
 $this->load->library('CI_Minifier');
 ```
 
-####(1) Load CI_Minifier library in Controller.####
+#####(1) Load CI_Minifier library in Controller.#####
 ```php
 class MY_Controller extends CI_Controller
 {
@@ -23,7 +25,7 @@ class MY_Controller extends CI_Controller
 
         $this->load->library('CI_Minifier');
 ```
-####(2) Load CI_Minifier library in config/autoload.php####
+#####(2) Load CI_Minifier library in config/autoload.php#####
 ```php
 $autoload['libraries'] = array('CI_Minifier');
 ```
@@ -83,3 +85,39 @@ $this->ci_minifier->init(2);
 // same as
 $this->ci_minifier->init('html,css'); 
 ```
+
+###API###
+
+####html()####
+Minify HTML string
+```php
+/**
+ * @param $input
+ * @return string
+ */
+$this->ci_minifier->html($input);
+```
+
+####css)####
+Minify CSS string
+```php
+/**
+ * @param $input
+ * @return string
+ */
+$this->ci_minifier->css($input);
+```
+
+####js()####
+Minify Javascript string
+ * Be careful:
+ * This method doesn't support "javascript automatic semicolon insertion", you must add semicolon by yourself,
+ * otherwise your javascript code will not work and generate error messages.
+```php
+/**
+ * @param $input
+ * @return string
+ */
+$this->ci_minifier->js($input);
+```
+   
