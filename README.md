@@ -111,6 +111,7 @@ $this->ci_minifier->css($input);
 
 ####js()####
 Minify Javascript string
+
 ***Be careful: This method doesn't support "javascript automatic semicolon insertion", you must add semicolon by yourself, otherwise your javascript code will not work and generate error messages***.
 ```php
 /**
