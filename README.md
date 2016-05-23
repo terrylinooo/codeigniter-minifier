@@ -45,10 +45,14 @@ Keep "class", "filename" and "filepath" fields blank.
 
 ###Options###
 
-CodeIgniter Minifier has the following options, you can set the "option value" or "option string" to init() to minify HTML, CSS, Javascript as your choice. 
-you can put them together and separated by commas, for example: 'html,js'
+CodeIgniter Minifier has the following options, you can set the "option number" or "option string" to init() to minify HTML, CSS, Javascript as your choice. 
 
-| option value  | option string | HTML | CSS | Javascript | 
+------------------------
+
+For setting option string, you can put them together and separated by commas, for example: 'html,js'
+
+| option number  | option string | HTML | CSS | Javascript |
+| ------------- | ------------- | ------------- | ------------- | ------------- |
 | 0 | off | x | x | x |
 | 1 | html,css,js | o | o | o |
 | 2 | html,css | o | o | x |
