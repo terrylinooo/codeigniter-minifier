@@ -11,21 +11,12 @@ Compress and minify output for your CodeIgniter framework websites. This library
 
 Copy CI_Minifier.php to libraries folder, and then load CI_Minifier library by one of the following ways.
 
+
+(1) Load CI_Minifier library in Controller.
 ```php
 $this->load->library('CI_Minifier');
 ```
-
-#####(1) Load CI_Minifier library in Controller.#####
-```php
-class MY_Controller extends CI_Controller
-{
-    public function __construct()
-    {
-        parent::__construct();
-
-        $this->load->library('CI_Minifier');
-```
-#####(2) Load CI_Minifier library in config/autoload.php#####
+(2) Load CI_Minifier library in config/autoload.php (recommeded)
 ```php
 $autoload['libraries'] = array('CI_Minifier');
 ```
