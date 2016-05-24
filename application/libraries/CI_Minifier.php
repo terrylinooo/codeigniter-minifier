@@ -93,9 +93,10 @@ class CI_Minifier
         }
     }
 
-
     /**
+     * CI Minifier - Output handler
      *
+     * @return mixed
      */
     public static function output()
     {
