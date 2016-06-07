@@ -84,6 +84,22 @@ $this->ci_minifier->init(2);
 // same as
 $this->ci_minifier->init('html,css'); 
 ```
+####Enable Javascript obfuscator
+enable_obfuscator($level = 2)
+```php
+/**
+ * @param int $level - default: 2
+ * @return bool
+ */
+$this->ci_minifier->enable_obfuscator();
+```
+| option number  | option level | 
+| ------------- | ------------- | 
+| 0 | None |
+| 1 | Numeric |
+| 2 | Normal |
+| 3 | High ASCII |
+
 --------------------------------------------------
 ##API##
 
