@@ -8,6 +8,11 @@ Compress and minify output for your CodeIgniter framework websites. This library
 It also works with `$this->output->cache($n);` to save minified content into the cache files.
 
 ------------------------------------
+###Change Logs
+* ver 1.0 - first release
+* ver 1.1 - Add javascript obfuscator (Dean Edwards' version)
+
+--------------------------------------
 
 ###Step 1: Load CI_Minifier library###
 
