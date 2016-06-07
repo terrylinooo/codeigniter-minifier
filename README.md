@@ -8,6 +8,11 @@ Compress and minify output for your CodeIgniter framework websites. This library
 It also works with `$this->output->cache($n);` to save minified content into the cache files.
 
 ------------------------------------
+###Change Logs
+* ver 1.0 - first release
+* ver 1.1 - Add javascript obfuscator (Dean Edwards' version)
+
+--------------------------------------
 
 ###Step 1: Load CI_Minifier library###
 
@@ -79,6 +84,26 @@ $this->ci_minifier->init(2);
 // same as
 $this->ci_minifier->init('html,css'); 
 ```
+####Enable Javascript obfuscator
+enable_obfuscator($level = 2)
+```php
+/**
+ * @param int $level - default: 2
+ * @return bool
+ */
+$this->ci_minifier->enable_obfuscator();
+```
+| option level  | obfuscation type | 
+| ------------- | ------------- | 
+| 0 | None |
+| 1 | Numeric |
+| 2 | Normal |
+| 3 | High ASCII |
+
+
+Javascript obfuscator is off by default, if you would like to use this feature, copy `JSPacker.php` to `/application/third_party/` folder, then put `$this->ci_minifier->enable_obfuscator();` in Controller.
+
+
 --------------------------------------------------
 ##API##
 
@@ -127,7 +152,7 @@ After minifying
 ```javascript
 <script>var d=new Date();d.setTime(d.getTime()+(7*24*60*60*1000));var expires="expires="+d.toUTCString();document.cookie="ssjd=1;domain=.dictpedia.com;"+expires;</script>
 ```
-####Failed example####
+####Failure example####
 Original code is working with popular browsers because that browsers support "javascript automatic semicolon insertion".
 ```javascript
 <script>
@@ -141,8 +166,23 @@ After minifying, this code will generate error because of semicolon issue.
 ```javascript
 <script>var d=new Date()d.setTime(d.getTime()+(7*24*60*60*1000))var expires="expires="+d.toUTCString()document.cookie="ssjd=1;domain=.dictpedia.com;"+expires;</script>
 ```
+####Ideas####
+Minifying all Javascript snippets is good but it breaks Google AdSense's TOS, so how to minify all of them excepts Google AdSense?
+```
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<ins class="adsbygoogle"
+     style="display:inline-block;width:160px;height:600px"
+     data-ad-client="ca-pub-xxxxxxxxxx"
+     data-ad-slot="4179732317"></ins>
+<script data-minify-level="0">
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+```
+CI Minifier will skip script tags contain `data-minify-level="0"`, this option can also control Javascript obfuscator encoding level, the default value is 2, you set the value 1-3 whatever you like.
 
 ---------------------------------------------
+
 ##License##
 GPL version 3
 

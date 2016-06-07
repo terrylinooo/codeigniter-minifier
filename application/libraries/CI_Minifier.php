@@ -5,17 +5,23 @@
  * @author      Terry Lin
  * @link        https://github.com/terrylinooo/CodeIgniter-Minifier
  * @license     GPL version 3 License Copyright
- *
+ * @code_style  PSR-2
+ * @change_log  1.0 - first release.
+ * 
+ *              1.1 - Add javascript obfuscator (Dean Edwards' version)
+ *                    To enable this function
+ *                    Step 1. put JSPacker.php at /third_party folder
+ *                    Step 2. use $this->ci_minifier->enable_obfuscator() in Controller.
  */
 
 class CI_Minifier
 {
-
-
+    
     private static $enable_html = true;
     private static $enable_js   = true;
     private static $enable_css  = true;
-
+    private static $enable_obfuscator = false;
+    private static $obfuscator;
 
     /**
      * Set a level type to handle the output.
@@ -37,6 +43,7 @@ class CI_Minifier
         self::$enable_html = false;
         self::$enable_css  = false;
         self::$enable_js   = false;
+
 
         if (is_numeric($level)) {
             switch ($level) {
@@ -93,6 +100,40 @@ class CI_Minifier
         }
     }
 
+    public function enable_obfuscator($level = 2)
+    {
+        self::$enable_obfuscator = true;
+
+        if (!class_exists('JSPacker')) {
+            try {
+                include APPPATH . 'third_party/JSPacker.php';
+
+            } catch (Exception $e) {
+                self::$enable_obfuscator = false;
+                return false;
+            }
+        }
+
+        switch ($level) {
+            case 0:
+                $packed_level = 'None';
+                break;
+            case 1:
+                $packed_level = 'Numeric';
+                break;
+            case 2:
+            default:
+                $packed_level = 'Normal';
+                break;
+            case 3:
+                $packed_level = 'High ASCII';
+                break;
+        }
+
+        self::$obfuscator = new JSPacker('', $packed_level, true, false);
+    }
+
+
     /**
      * CI Minifier - Output handler
      *
@@ -123,8 +164,29 @@ class CI_Minifier
                 // Get all script Tags and minify them
                 $scripts = $dom->getElementsByTagName('script');
                 foreach ($scripts as $script) {
-                    if (!empty($script->nodeValue)) {
-                        $script->nodeValue = self::minifyJS($script->nodeValue);
+                    $data_minify_level = $script->getAttribute('data-minify-level');
+                    if ($data_minify_level != '0') {
+                        if (!empty($script->nodeValue)) {
+                            if (self::$enable_obfuscator) {
+                                switch ($data_minify_level) {
+                                    case 1:
+                                        $data_minify_level = 10;
+                                        break;
+                                    case 2:
+                                    default:
+                                        $data_minify_level = 62;
+                                        break;
+                                    case 3:
+                                        $data_minify_level = 95;
+                                        break;
+                                }
+                                self::$obfuscator->set_encoding($data_minify_level);
+                                self::$obfuscator->load_script($script->nodeValue);
+                                $script->nodeValue = self::$obfuscator->pack();
+                            } else {
+                                $script->nodeValue = self::minifyJS($script->nodeValue);
+                            }
+                        }
                     }
                 }
             }
