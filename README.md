@@ -93,13 +93,13 @@ enable_obfuscator($level = 2)
  */
 $this->ci_minifier->enable_obfuscator();
 ```
-| option number  | option level | 
+| option level  | obfuscation type | 
 | ------------- | ------------- | 
 | 0 | None |
 | 1 | Numeric |
 | 2 | Normal |
 | 3 | High ASCII |
-
+Javascript obfuscator is off by default, if you would like to use this feature, copy `JSPacker.php` to `/application/third_party/` folder, then put `$this->ci_minifier->enable_obfuscator();` in Controller.
 --------------------------------------------------
 ##API##
 
