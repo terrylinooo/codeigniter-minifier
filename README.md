@@ -2,7 +2,6 @@
 
 ![Screenshot](http://i.imgur.com/L5Cps84.png)
 
-
 Compress and minify output for your CodeIgniter framework websites. This library supports CodeIgniter 3 only, it is able to not just minify HTML, but also CSS and Javascript.
 
 It also works with `$this->output->cache($n);` to save minified content into the cache files.
@@ -85,6 +84,9 @@ $this->ci_minifier->init(2);
 $this->ci_minifier->init('html,css'); 
 ```
 ####Enable Javascript obfuscator
+
+![Screenshot](http://i.imgur.com/PRGEKHj.png)
+
 enable_obfuscator($level = 2)
 ```php
 /**
