@@ -92,7 +92,16 @@ class JSPacker {
 		$this->_fastDecode = $_fastDecode;	
 		$this->_specialChars = $_specialChars;
 	}
-	
+
+	public function load_script($_script)
+	{
+		$this->_script = $_script . "\n";
+	}
+
+    public function set_encoding($_encoding)
+	{
+		$this->_encoding = $_encoding;
+	}
 	public function pack() {
 		$this->_addParser('_basicCompression');
 		if ($this->_specialChars)
@@ -341,7 +350,7 @@ class JSPacker {
 			$unpack = preg_replace($ENCODE, $inline, $unpack);
 		}
 		// pack the boot function too
-		$unpackPacker = new JavaScriptPacker($unpack, 0, false, true);
+		$unpackPacker = new JSPacker($unpack, 0, false, true);
 		$unpack = $unpackPacker->pack();
 		
 		// arguments
@@ -738,4 +747,3 @@ class ParseMaster {
 		return preg_replace($this->ESCAPE, '', $string);
 	}
 }
-?>
