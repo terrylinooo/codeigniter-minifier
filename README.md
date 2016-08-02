@@ -104,10 +104,12 @@ $this->ci_minifier->enable_obfuscator();
 
 Javascript obfuscator is off by default, if you would like to use this feature, copy `JSPacker.php` to `/application/third_party/` folder, then put `$this->ci_minifier->enable_obfuscator();` in Controller.
 
+--------------------------------------
+
 ####Use PHP Simple Dom parser to parse "script" and "style" tags
 
-Step 1. put Simple_html_dom.php at /third_party folder
-Step 2. use $this->ci_minifier->set_domparser(2); in Controller.
+1. put Simple_html_dom.php at /third_party folder
+2. use $this->ci_minifier->set_domparser(2); in Controller.
 
 option value: 1 (default, PHP bulti-in Dom parser - DOMDocument)
 option value: 2 (PHP Simple Dom parser)
@@ -146,6 +148,16 @@ $this->ci_minifier->js($input);
 ```
 ***Be careful: This method doesn't support "javascript automatic semicolon insertion", you must add semicolon by yourself, otherwise your javascript code will not work and generate error messages***.
 
+####js_packer()####
+Minify Javascript string by use JSPacker (Dean Edwards' version)
+```php
+/**
+ * @param $input
+ * @param $level
+ * @return string
+ */
+$this->ci_minifier->js($input, $level = 2);
+```
 ####Success example####
 Original code:
 ```javascript
