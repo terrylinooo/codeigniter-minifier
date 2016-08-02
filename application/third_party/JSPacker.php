@@ -98,7 +98,7 @@ class JSPacker {
 		$this->_script = $_script . "\n";
 	}
 
-    	public function set_encoding($_encoding)
+    public function set_encoding($_encoding)
 	{
 		$this->_encoding = $_encoding;
 	}
