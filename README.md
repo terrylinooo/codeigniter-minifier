@@ -10,6 +10,7 @@ It also works with `$this->output->cache($n);` to save minified content into the
 ###Change Logs
 * ver 1.0 - first release
 * ver 1.1 - Add javascript obfuscator (Dean Edwards' version)
+* ver 1.2 - Add PHP Simple Dom parser to parse "script" and "style" tags. It is an alternative if the default parser (DOMDocument) causes your Javasctipt to not work.
 
 --------------------------------------
 
@@ -105,6 +106,15 @@ $this->ci_minifier->enable_obfuscator();
 
 Javascript obfuscator is off by default, if you would like to use this feature, copy `JSPacker.php` to `/application/third_party/` folder, then put `$this->ci_minifier->enable_obfuscator();` in Controller.
 
+--------------------------------------
+
+####Use PHP Simple Dom parser to parse "script" and "style" tags
+
+1. put Simple_html_dom.php at /third_party folder
+2. use $this->ci_minifier->set_domparser(2); in Controller.
+
+option value: 1 (default, PHP bulti-in Dom parser - DOMDocument)
+option value: 2 (PHP Simple Dom parser)
 
 --------------------------------------------------
 ##API##
@@ -140,6 +150,16 @@ $this->ci_minifier->js($input);
 ```
 ***Be careful: This method doesn't support "javascript automatic semicolon insertion", you must add semicolon by yourself, otherwise your javascript code will not work and generate error messages***.
 
+####js_packer()####
+Minify Javascript string by use JSPacker (Dean Edwards' version)
+```php
+/**
+ * @param $input
+ * @param $level
+ * @return string
+ */
+$this->ci_minifier->js($input, $level = 2);
+```
 ####Success example####
 Original code:
 ```javascript

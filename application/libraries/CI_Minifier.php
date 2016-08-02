@@ -7,21 +7,34 @@
  * @license     GPL version 3 License Copyright
  * @code_style  PSR-2
  * @change_log  1.0 - first release.
- * 
+ *
  *              1.1 - Add javascript obfuscator (Dean Edwards' version)
  *                    To enable this function
  *                    Step 1. put JSPacker.php at /third_party folder
  *                    Step 2. use $this->ci_minifier->enable_obfuscator() in Controller.
+ *              1.2   Add PHP Simple Dom parser (If you met problem with DOMDocument, it is a solution)
+ *                    Step 1. put Simple_html_dom.php at /third_party folder
+ *                    Step 2. use $this->ci_minifier->set_domparser(2); in Controller.
  */
 
 class CI_Minifier
 {
-    
+
     private static $enable_html = true;
     private static $enable_js   = true;
     private static $enable_css  = true;
+    /**
+     * @var bool
+     */
     private static $enable_obfuscator = false;
     private static $obfuscator;
+
+    /*
+     *  1: DOMDocument
+     *  2: simplehtmldom
+     */
+
+    public static $dom_parser = 2;
 
     /**
      * Set a level type to handle the output.
@@ -43,7 +56,6 @@ class CI_Minifier
         self::$enable_html = false;
         self::$enable_css  = false;
         self::$enable_js   = false;
-
 
         if (is_numeric($level)) {
             switch ($level) {
@@ -100,6 +112,28 @@ class CI_Minifier
         }
     }
 
+    public function set_domparser($type = 1)
+    {
+        self::$dom_parser = $type;
+
+        if ($type == 2) {
+            if (!class_exists('Simple_html_dom')) {
+                try {
+                    include APPPATH . 'third_party/Simple_html_dom.php';
+
+                } catch (Exception $e) {
+                    self::$dom_parser = 1;
+                    return false;
+                }
+            }
+        }
+    }
+
+
+    /**
+     * @param int $level
+     * @return bool
+     */
     public function enable_obfuscator($level = 2)
     {
         self::$enable_obfuscator = true;
@@ -150,65 +184,96 @@ class CI_Minifier
 
         if (!(!self::$enable_html and !self::$enable_css and !self::$enable_js)) {
             if (self::$enable_js or self::$enable_css) {
-                // You're facing "Fatal error: Class 'DOMDocument' not found" error
-                // you need to install php-xml to support PHP DOM
-                // For CentOS, run "yum install php-xml"
-                $dom = new DOMDocument;
 
-                // prevent DOMDocument::loadHTML error
-                libxml_use_internal_errors(true);
-                $dom->loadHTML($buffer);
+                if (self::$dom_parser == 1) {
+                    // You're facing "Fatal error: Class 'DOMDocument' not found" error
+                    // you need to install php-xml to support PHP DOM
+                    // For CentOS, run "yum install php-xml"
+                    $dom = new DOMDocument;
+
+                    // prevent DOMDocument::loadHTML error
+                    libxml_use_internal_errors(true);
+                    $dom->loadHTML($buffer, LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
+                }
+                if (self::$dom_parser == 2) {
+                    $dom = new \SimpleDom\Simple_html_dom();
+                    $dom->load($buffer, true, false);
+                }
             }
 
             if (self::$enable_js) {
                 // Get all script Tags and minify them
-                $scripts = $dom->getElementsByTagName('script');
-                foreach ($scripts as $script) {
-                    $data_minify_level = $script->getAttribute('data-minify-level');
-                    if ($data_minify_level != '0') {
-                        if (!empty($script->nodeValue)) {
-                            if (self::$enable_obfuscator) {
-                                switch ($data_minify_level) {
-                                    case 1:
-                                        $data_minify_level = 10;
-                                        break;
-                                    case 2:
-                                    default:
-                                        $data_minify_level = 62;
-                                        break;
-                                    case 3:
-                                        $data_minify_level = 95;
-                                        break;
+                if (self::$dom_parser == 1) {
+                    $scripts = $dom->getElementsByTagName('script');
+                    foreach ($scripts as $script) {
+                        $data_minify_level = $script->getAttribute('data-minify-level');
+                        if ($data_minify_level != '0') {
+                            if (!empty($script->nodeValue)) {
+                                if (self::$enable_obfuscator) {
+                                    $script->nodeValue = self::packerJS($script->nodeValue, $data_minify_level);
+                                } else {
+                                    $script->nodeValue = self::minifyJS($script->nodeValue);
                                 }
-                                self::$obfuscator->set_encoding($data_minify_level);
-                                self::$obfuscator->load_script($script->nodeValue);
-                                $script->nodeValue = self::$obfuscator->pack();
-                            } else {
-                                $script->nodeValue = self::minifyJS($script->nodeValue);
                             }
                         }
                     }
                 }
+                if (self::$dom_parser == 2) {
+                    $scripts = $dom->find('script');
+                    foreach ($scripts as $script) {
+                        $data_minify_level = $script->{'data-minify-level'};
+                        if ($data_minify_level !== '0') {
+                            if (!empty($script->innertext)) {
+                                if (self::$enable_obfuscator) {
+                                    $script->innertext = self::packerJS($script->innertext, $data_minify_level);
+                                } else {
+                                    $script->innertext = self::minifyJS($script->innertext);
+                                }
+                            }
+                        }
+                    }
+                }
+
             }
 
             if (self::$enable_css) {
                 // Get all style Tags and minify them
-                $styles = $dom->getElementsByTagName('style');
-                foreach ($styles as $style) {
-                    if (!empty($style->nodeValue)) {
-                        $style->nodeValue = self::minifyCSS($style->nodeValue);
+                if (self::$dom_parser == 1) {
+                    $styles = $dom->getElementsByTagName('style');
+                    foreach ($styles as $style) {
+                        if (!empty($style->nodeValue)) {
+                            $style->nodeValue = self::minifyCSS($style->nodeValue);
+                        }
                     }
                 }
+                if (self::$dom_parser == 2) {
+                    $styles = $dom->find('style');
+                    foreach ($styles as $style) {
+                        if (!empty($style->innertext)) {
+                            $style->innertext = self::minifyCSS($style->innertext);
+                        }
+                    }
+                }
+
             }
 
             if (self::$enable_js or self::$enable_css) {
-                if (self::$enable_html) {
-                    $new_buffer = self::minifyHTML($dom->saveHTML());
-                } else {
-                    $new_buffer = $dom->saveHTML();
+                if (self::$dom_parser == 1) {
+                    if (self::$enable_html) {
+                        $new_buffer = self::minifyHTML($dom->saveHTML());
+                    } else {
+                        $new_buffer = $dom->saveHTML();
+                    }
+                    libxml_use_internal_errors(false);
+                    unset($dom);
                 }
-                libxml_use_internal_errors(false);
-                unset($dom);
+                if (self::$dom_parser == 2) {
+                    if (self::$enable_html) {
+                        $new_buffer = self::minifyHTML($dom->save());
+                    } else {
+                        $new_buffer = $dom->save();
+                    }
+                }
             } else {
                 if (self::$enable_html) {
                     $new_buffer = self::minifyHTML($buffer);
@@ -438,7 +503,27 @@ class CI_Minifier
             $input
         );
     }
-
+    /**
+     * Another minification engine by Dean Edwards.
+     */
+    private static function packerJS($input, $level = 2)
+    {
+        switch ($level) {
+            case 1:
+                $data_minify_level = 10;
+                break;
+            case 2:
+            default:
+                $data_minify_level = 62;
+                break;
+            case 3:
+                $data_minify_level = 95;
+                break;
+        }
+        self::$obfuscator->set_encoding($data_minify_level);
+        self::$obfuscator->load_script($input);
+        return self::$obfuscator->pack();
+    }
     /**
      * Alias for static minifyHTML()
      *
@@ -470,6 +555,16 @@ class CI_Minifier
     public function js($input)
     {
         return self::minifyJS($input);
+    }
+    /**
+     * Alias for static packJS()
+     *
+     * @param $input
+     * @return mixed
+     */
+    public function js_packer($input, $level = 2)
+    {
+        return self::packerJS($input, $level);
     }
 }
 
