@@ -11,6 +11,7 @@ It also works with `$this->output->cache($n);` to save minified content into the
 ###Change Logs
 * ver 1.0 - first release
 * ver 1.1 - Add javascript obfuscator (Dean Edwards' version)
+* ver 1.2 - Add PHP Simple Dom parser to parse "script" and "style" tags. It is an alternative if the default parser (DOMDocument) causes your Javasctipt to not work.
 
 --------------------------------------
 
@@ -103,6 +104,13 @@ $this->ci_minifier->enable_obfuscator();
 
 Javascript obfuscator is off by default, if you would like to use this feature, copy `JSPacker.php` to `/application/third_party/` folder, then put `$this->ci_minifier->enable_obfuscator();` in Controller.
 
+####Use PHP Simple Dom parser to parse "script" and "style" tags
+
+Step 1. put Simple_html_dom.php at /third_party folder
+Step 2. use $this->ci_minifier->set_domparser(2); in Controller.
+
+option value: 1 (default, PHP bulti-in Dom parser - DOMDocument)
+option value: 2 (PHP Simple Dom parser)
 
 --------------------------------------------------
 ##API##
