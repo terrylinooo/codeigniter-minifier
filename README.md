@@ -150,7 +150,8 @@ $this->ci_minifier->js($input);
 ```
 ***Be careful: This method doesn't support "javascript automatic semicolon insertion", you must add semicolon by yourself, otherwise your javascript code will not work and generate error messages***.
 
-####js_packer()####
+###js_packer()###
+
 Minify Javascript string by use JSPacker (Dean Edwards' version)
 ```php
 /**
@@ -160,7 +161,8 @@ Minify Javascript string by use JSPacker (Dean Edwards' version)
  */
 $this->ci_minifier->js($input, $level = 2);
 ```
-####Success example####
+###Success example###
+
 Original code:
 ```javascript
 <script>
@@ -174,7 +176,8 @@ After minifying
 ```javascript
 <script>var d=new Date();d.setTime(d.getTime()+(7*24*60*60*1000));var expires="expires="+d.toUTCString();document.cookie="ssjd=1;domain=.dictpedia.com;"+expires;</script>
 ```
-####Failure example####
+###Failure example###
+
 Original code is working with popular browsers because that browsers support "javascript automatic semicolon insertion".
 ```javascript
 <script>
@@ -188,7 +191,8 @@ After minifying, this code will generate error because of semicolon issue.
 ```javascript
 <script>var d=new Date()d.setTime(d.getTime()+(7*24*60*60*1000))var expires="expires="+d.toUTCString()document.cookie="ssjd=1;domain=.dictpedia.com;"+expires;</script>
 ```
-####Ideas####
+###Ideas###
+
 Minifying all Javascript snippets is good but it breaks Google AdSense's TOS, so how to minify all of them excepts Google AdSense?
 ```
 <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
@@ -206,5 +210,6 @@ CI Minifier will skip script tags contain `data-minify-level="0"`, this option c
 ---------------------------------------------
 
 ##License##
+
 GPL version 3
 
