@@ -7,14 +7,14 @@ Compress and minify output for your CodeIgniter framework websites. This library
 It also works with `$this->output->cache($n);` to save minified content into the cache files.
 
 ------------------------------------
-###Change Logs
+### Change Logs
 * ver 1.0 - first release
 * ver 1.1 - Add javascript obfuscator (Dean Edwards' version)
 * ver 1.2 - Add PHP Simple Dom parser to parse "script" and "style" tags. It is an alternative if the default parser (DOMDocument) causes your Javasctipt to not work.
 
 --------------------------------------
 
-###Step 1: Load CI_Minifier library###
+### Step 1: Load CI_Minifier library
 
 Copy CI_Minifier.php to libraries folder, and then load CI_Minifier library by one of the following ways.
 
@@ -28,11 +28,11 @@ $this->load->library('CI_Minifier');
 $autoload['libraries'] = array('CI_Minifier');
 ```
 
-###Step 2: Enable Hooks in config/config.php###
+### Step 2: Enable Hooks in config/config.php
 ```php
 $config['enable_hooks'] = TRUE;
 ```
-###Step 3: Define a 'display_override' to config/hooks.php###
+### Step 3: Define a 'display_override' to config/hooks.php
 ```php
 $hook['display_override'][] = array(
     'class' => '',
@@ -44,7 +44,7 @@ $hook['display_override'][] = array(
 Keep "class", "filename" and "filepath" fields blank. 
 
 ----------------------------------------
-##Options##
+## Options
 
 CodeIgniter Minifier has the following options, you can set the "option number" or "option string" to init() to minify HTML, CSS, Javascript as your choice. 
 
@@ -84,7 +84,7 @@ $this->ci_minifier->init(2);
 // same as
 $this->ci_minifier->init('html,css'); 
 ```
-####Enable Javascript obfuscator
+#### Enable Javascript obfuscator
 
 ![Screenshot](http://i.imgur.com/PRGEKHj.png)
 
@@ -108,7 +108,7 @@ Javascript obfuscator is off by default, if you would like to use this feature, 
 
 --------------------------------------
 
-####Use PHP Simple Dom parser to parse "script" and "style" tags
+#### Use PHP Simple Dom parser to parse "script" and "style" tags
 
 1. put Simple_html_dom.php at /third_party folder
 2. use $this->ci_minifier->set_domparser(2); in Controller.
@@ -117,9 +117,9 @@ option value: 1 (default, PHP bulti-in Dom parser - DOMDocument)
 option value: 2 (PHP Simple Dom parser)
 
 --------------------------------------------------
-##API##
+## API
 
-####html()####
+#### html()
 Minify HTML string
 ```php
 /**
@@ -129,7 +129,7 @@ Minify HTML string
 $this->ci_minifier->html($input);
 ```
 
-####css()####
+#### css()
 Minify CSS string
 ```php
 /**
@@ -139,7 +139,7 @@ Minify CSS string
 $this->ci_minifier->css($input);
 ```
 
-####js()####
+#### js()
 Minify Javascript string
 ```php
 /**
@@ -150,7 +150,7 @@ $this->ci_minifier->js($input);
 ```
 ***Be careful: This method doesn't support "javascript automatic semicolon insertion", you must add semicolon by yourself, otherwise your javascript code will not work and generate error messages***.
 
-###js_packer()###
+### js_packer()
 
 Minify Javascript string by use JSPacker (Dean Edwards' version)
 ```php
@@ -161,7 +161,7 @@ Minify Javascript string by use JSPacker (Dean Edwards' version)
  */
 $this->ci_minifier->js($input, $level = 2);
 ```
-###Success example###
+### Success example
 
 Original code:
 ```javascript
@@ -176,7 +176,7 @@ After minifying
 ```javascript
 <script>var d=new Date();d.setTime(d.getTime()+(7*24*60*60*1000));var expires="expires="+d.toUTCString();document.cookie="ssjd=1;domain=.dictpedia.com;"+expires;</script>
 ```
-###Failure example###
+### Failure example
 
 Original code is working with popular browsers because that browsers support "javascript automatic semicolon insertion".
 ```javascript
@@ -191,7 +191,7 @@ After minifying, this code will generate error because of semicolon issue.
 ```javascript
 <script>var d=new Date()d.setTime(d.getTime()+(7*24*60*60*1000))var expires="expires="+d.toUTCString()document.cookie="ssjd=1;domain=.dictpedia.com;"+expires;</script>
 ```
-###Ideas###
+### Ideas
 
 Minifying all Javascript snippets is good but it breaks Google AdSense's TOS, so how to minify all of them excepts Google AdSense?
 ```
@@ -209,7 +209,7 @@ CI Minifier will skip script tags contain `data-minify-level="0"`, this option c
 
 ---------------------------------------------
 
-##License##
+## License
 
 GPL version 3
 
